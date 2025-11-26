@@ -11,6 +11,6 @@ void fragment() {
 
 	float val = step(abs(normUV.y - sample), 0.05);
 	
-	vec3 col = lch_srgb(vec3(0.8, 0.1, UV.x));
-	COLOR = vec4(col, 1.0);
+	//vec3 col = lch_srgb(vec3(0.8, 0.1, UV.x));
+	COLOR = vec4(val, val, val, 1.0);
 }
