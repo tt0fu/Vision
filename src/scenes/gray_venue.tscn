@@ -1,0 +1,112 @@
+[gd_scene load_steps=9 format=3 uid="uid://cj3b3jvtoxbrc"]
+
+[ext_resource type="PackedScene" uid="uid://exd62laauuom" path="res://scenes/template.tscn" id="1_cjyw0"]
+[ext_resource type="Material" uid="uid://bxbvoganivqxu" path="res://mateials/noise.material" id="3_cuwl7"]
+[ext_resource type="Script" uid="uid://do2tq1r265hje" path="res://scripts/set_x_scale.gd" id="4_h0kcr"]
+[ext_resource type="Texture2D" uid="uid://bf1mlhdygaq2d" path="res://templates/gray_venue.png" id="5_hyp5h"]
+[ext_resource type="Texture2D" uid="uid://bvc36pk1edugq" path="res://textures/logo name.png" id="5_knngs"]
+[ext_resource type="Material" uid="uid://cgf48tb18dt3w" path="res://mateials/spectrogram.material" id="7_8ssvu"]
+[ext_resource type="Material" uid="uid://cd7brvyrm68tj" path="res://mateials/waveform.material" id="8_30hbv"]
+[ext_resource type="Material" uid="uid://bkj5y2ddtr7rm" path="res://mateials/gray_venue.material" id="8_mjmke"]
+
+[node name="Gray Venue" instance=ExtResource("1_cjyw0")]
+
+[node name="Audio processor" parent="." index="0" node_paths=PackedStringArray("scale_controls")]
+waveform_materials = Array[Material]([ExtResource("8_30hbv")])
+dft_materials = Array[Material]([ExtResource("7_8ssvu"), ExtResource("8_mjmke")])
+chrono_materials = Array[Material]([ExtResource("8_30hbv"), ExtResource("3_cuwl7"), ExtResource("8_mjmke")])
+scale_controls = [NodePath("../Booth/Logo")]
+
+[node name="Template" type="TextureRect" parent="." index="1"]
+visible = false
+modulate = Color(1, 1, 1, 0.5)
+z_index = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_hyp5h")
+metadata/_edit_lock_ = true
+
+[node name="Booth" type="ColorRect" parent="." index="2"]
+material = ExtResource("3_cuwl7")
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -210.0
+offset_bottom = 800.0
+grow_horizontal = 0
+script = ExtResource("4_h0kcr")
+metadata/_edit_lock_ = true
+
+[node name="Logo" type="TextureRect" parent="Booth" index="0"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -105.0
+offset_top = -105.0
+offset_right = 105.0
+offset_bottom = 105.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -1.5707964
+pivot_offset = Vector2(105, 105)
+texture = ExtResource("5_knngs")
+expand_mode = 5
+metadata/_edit_lock_ = true
+
+[node name="Right Spectrogram" type="ColorRect" parent="Booth" index="1"]
+z_index = 1
+material = ExtResource("7_8ssvu")
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 210.0
+rotation = -1.5707964
+scale = Vector2(-1, 1)
+script = ExtResource("4_h0kcr")
+metadata/_edit_lock_ = true
+
+[node name="Left Spectrogram" type="ColorRect" parent="Booth" index="2"]
+z_index = 1
+material = ExtResource("7_8ssvu")
+layout_mode = 0
+offset_top = 800.0
+offset_right = 400.0
+offset_bottom = 1010.0
+rotation = -1.5707964
+script = ExtResource("4_h0kcr")
+metadata/_edit_lock_ = true
+
+[node name="Waveform Right" type="ColorRect" parent="." index="3"]
+material = ExtResource("8_30hbv")
+offset_left = 1413.0
+offset_right = 2826.0
+offset_bottom = 400.0
+scale = Vector2(-1, 1)
+script = ExtResource("4_h0kcr")
+metadata/_edit_lock_ = true
+
+[node name="Waveform Left" type="ColorRect" parent="." index="4"]
+material = ExtResource("8_30hbv")
+offset_top = 400.0
+offset_right = 1413.0
+offset_bottom = 800.0
+script = ExtResource("4_h0kcr")
+metadata/_edit_lock_ = true
+
+[node name="Gridnode" type="ColorRect" parent="." index="5"]
+material = ExtResource("8_mjmke")
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -208.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("4_h0kcr")
+metadata/_edit_lock_ = true

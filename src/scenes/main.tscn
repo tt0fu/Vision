@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cbf3y2ovu7crn"]
+[gd_scene load_steps=6 format=3 uid="uid://cbf3y2ovu7crn"]
 
 [ext_resource type="Script" uid="uid://dsseaexjixcjs" path="res://scripts/switch_scene.gd" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://c3mfhuhq5ck6h" path="res://scenes/general.tscn" id="2_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://cocfj7i34h31n" path="res://scenes/bass_station.tscn" id="3_sugp2"]
+[ext_resource type="PackedScene" uid="uid://cj3b3jvtoxbrc" path="res://scenes/gray_venue.tscn" id="4_jyhfs"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_0wfyh"]
 
@@ -15,12 +16,16 @@ max_polyphony = 5
 
 [node name="Scene switcher" type="Node" parent="." node_paths=PackedStringArray("scenes")]
 script = ExtResource("1_o5qli")
-scenes = [NodePath("../General"), NodePath("../Bass Station")]
+scenes = [NodePath("../General"), NodePath("../Bass Station"), NodePath("../Gray Venue")]
 
 [node name="General" parent="." instance=ExtResource("2_0wfyh")]
 process_mode = 4
 visible = false
 
 [node name="Bass Station" parent="." instance=ExtResource("3_sugp2")]
+process_mode = 4
+visible = false
+
+[node name="Gray Venue" parent="." instance=ExtResource("4_jyhfs")]
 process_mode = 4
 visible = false

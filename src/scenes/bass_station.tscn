@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://cocfj7i34h31n"]
 
-[ext_resource type="Texture2D" uid="uid://dqywbec2u7kpj" path="res://templates/Template.png" id="1_1lgbm"]
+[ext_resource type="Texture2D" uid="uid://dqywbec2u7kpj" path="res://templates/bass_station.png" id="1_1lgbm"]
 [ext_resource type="PackedScene" uid="uid://exd62laauuom" path="res://scenes/template.tscn" id="1_e81ch"]
 [ext_resource type="Material" uid="uid://il028dtvn1p5" path="res://mateials/spectrogram_circle.material" id="2_e81ch"]
 [ext_resource type="Script" uid="uid://do2tq1r265hje" path="res://scripts/set_x_scale.gd" id="3_s6n0l"]
