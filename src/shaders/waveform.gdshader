@@ -87,7 +87,7 @@ void fragment() {
 	float dist = wave_distance(UV.x * float(SAMPLE_COUNT) + center_sample - float(SAMPLE_COUNT) * focus, 1.0 - UV.y);
 	float val = fade(dist * float(SAMPLE_COUNT) / line_width);
 	//float val = step(abs(1.0 - UV.y - bass), 0.001);
-	vec3 col = lch_srgb(vec3(0.8, 0.1, fract(pattern(UV * 2.0, chrono) + chrono * 2.0)));
+	vec3 col = lch_srgb(vec3(0.8, 0.1, fract(pattern(UV * vec2(scale_x, 1.0), chrono) * 2.0) + chrono * 2.0));
 	//COLOR = vec4(lch_srgb(vec3(0.7, 0.1, pattern(UV * 2.0, chrono))), 1.0);
 	COLOR = vec4(col * val, 1.0);
 }

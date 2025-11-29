@@ -13,6 +13,5 @@ uniform float bass = 0.0;
 uniform float chrono = 0.0;
 
 void fragment() {
-	vec3 col = lch_srgb(vec3(0.8, 0.1, fract(pattern(UV * vec2(scale_x * 2.0, 2.0), chrono) + chrono * 2.0)));
-	COLOR = vec4(col, 1.0);
+	COLOR = vec4(lch_srgb(vec3(0.8, 0.1, fract(pattern(UV * vec2(scale_x * 2.0, 2.0), chrono) * 2.0) + chrono * 2.0)), 1.0);
 }

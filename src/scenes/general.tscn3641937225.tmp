@@ -4,15 +4,23 @@
 [ext_resource type="Material" uid="uid://cd7brvyrm68tj" path="res://mateials/waveform.material" id="1_pduxd"]
 [ext_resource type="Script" uid="uid://do2tq1r265hje" path="res://scripts/set_x_scale.gd" id="3_pduxd"]
 
-[node name="General" instance=ExtResource("1_1aar8")]
+[node name="CanvasLayer" instance=ExtResource("1_1aar8")]
 
 [node name="Audio processor" parent="." index="0"]
 waveform_materials = Array[Material]([ExtResource("1_pduxd")])
 chrono_materials = Array[Material]([ExtResource("1_pduxd")])
 
-[node name="Waveform" type="ColorRect" parent="." index="1"]
-material = ExtResource("1_pduxd")
+[node name="General" type="Control" parent="." index="3"]
+layout_mode = 3
 anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Waveform" type="ColorRect" parent="General" index="0"]
+material = ExtResource("1_pduxd")
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2

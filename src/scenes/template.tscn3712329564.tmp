@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://exd62laauuom"]
+
+[ext_resource type="Script" uid="uid://buihdkxefqne6" path="res://scripts/process_audio.gd" id="2_pduxd"]
+[ext_resource type="Script" uid="uid://dsseaexjixcjs" path="res://scripts/switch_scene.gd" id="2_uxr40"]
+
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_15vf4"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Audio processor" type="Node" parent="."]
+script = ExtResource("2_pduxd")
+
+[node name="Microphone Player" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamMicrophone_15vf4")
+autoplay = true
+max_polyphony = 5
+
+[node name="Scene switcher" type="ResourcePreloader" parent="."]
+script = ExtResource("2_uxr40")

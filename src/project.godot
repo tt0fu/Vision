@@ -11,8 +11,12 @@ config_version=5
 [application]
 
 config/name="Vision"
-run/main_scene="uid://exd62laauuom"
+run/main_scene="uid://cbf3y2ovu7crn"
 config/features=PackedStringArray("4.5", "Forward Plus")
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/show_image=false
+boot_splash/fullsize=false
+boot_splash/use_filter=false
 config/icon="res://icon.svg"
 
 [audio]
@@ -25,6 +29,7 @@ driver/enable_input=true
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/size/resizable=false
+window/size/borderless=true
 window/size/minimize_disabled=true
 window/size/maximize_disabled=true
 

@@ -127,6 +127,8 @@ var waveform_materials : Array[Material]
 var dft_materials : Array[Material]
 @export
 var chrono_materials : Array[Material]
+@export
+var scale_controls : Array[Control]
 
 func _process(delta: float) -> void:
 	update_samples_buffer()
@@ -148,3 +150,7 @@ func _process(delta: float) -> void:
 	for material in chrono_materials:
 		material.set_shader_parameter("bass", bass)
 		material.set_shader_parameter("chrono", chrono)
+	
+	var scale = lerp(0.5, 1.0, bass);
+	for control in scale_controls:
+		control.set_scale(Vector2(scale, scale))

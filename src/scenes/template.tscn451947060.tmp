@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://exd62laauuom"]
+
+[ext_resource type="Script" uid="uid://buihdkxefqne6" path="res://scripts/process_audio.gd" id="2_pduxd"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Audio processor" type="Node" parent="."]
+script = ExtResource("2_pduxd")
