@@ -11,8 +11,6 @@ func create_packed_vector2_array(count: int) -> PackedVector2Array:
 	init.fill(Vector2(0.0, 0.0))
 	return PackedVector2Array(init)
 
-var capture = AudioServer.get_bus_effect(0, 0)
-
 var device = RenderingServer.create_local_rendering_device()
 var dft_file = load("res://shaders/dft.glsl")
 var dft_spirv: RDShaderSPIRV = dft_file.get_spirv()
@@ -38,7 +36,22 @@ var samples_bytes = create_samples_bytes()
 var samples_buffer = device.storage_buffer_create(samples_bytes.size(), samples_bytes)
 var samples_uniform = create_uniform(samples_buffer, 0)
 
+var gain = 1.0
+
 func update_samples_buffer():
+	gain += 0.01;
+	
+	var capture = AudioServer.get_bus_effect(0, 0)
+	var new_samples_count = capture.get_frames_available()
+	var new_samples = capture.get_buffer(new_samples_count)
+	for i in range(new_samples_count):
+		var sample = (new_samples[i].x + new_samples[i].y) * 0.5
+		var volume = abs(sample * gain)
+		if volume > 0.9:
+			gain /= (volume / 0.9)
+		samples_data.set((samples_start + i) % SAMPLE_COUNT, sample * gain)
+	samples_start = (samples_start + new_samples_count) % SAMPLE_COUNT
+	
 	samples_bytes = create_samples_bytes()
 	device.buffer_update(samples_buffer, 0, samples_bytes.size(), samples_bytes)
 
@@ -70,47 +83,68 @@ const SAMPLE_RATE = 44100.0;
 const LOWEST_FREQUENCY = SAMPLE_RATE / float(SAMPLE_COUNT);
 const EXP_BINS = floor(BIN_COUNT / (log(SAMPLE_RATE / (2.0 * LOWEST_FREQUENCY)) / log(2.0)));
 
+func bin(frequency : float) -> float:
+	return clamp(EXP_BINS * log(frequency / LOWEST_FREQUENCY) / log(2.0), 0, BIN_COUNT);
+
 var period = 100.0
 var focus = 0.5
 var center_sample = 2048.0
+var bass = 0.0
+var chrono = 0.0
 
-func update_stabilization():
+func analyze_dft():
 	var mx = 0.0
 	var max_bin = 1
-	for i in range(BIN_COUNT):
-		var cur = dft[i].length()
-		if cur > mx:
+	var sum = 0.0
+	var bass_end = bin(200)
+	
+	var prev = dft[0].length()
+	var cur = dft[1].length()
+	var next = dft[2].length()
+	for i in range(1, BIN_COUNT - 3):
+		sum += cur * (1.0 if i < bass_end else 0.0)
+		
+		if (cur >= prev) && (cur >= next) && (cur * (1.0 - float(i) / BIN_COUNT) > mx):
 			mx = cur
 			max_bin = i
-		#mx = max(mx, dft[i].length())
-	#while(max_bin < BIN_COUNT - 1 && 
-		 #(dft[max_bin].length() < dft[max_bin + 1].length() || 
-		  #dft[max_bin].length() < dft[max_bin - 1].length() || 
-		  #dft[max_bin].length() < mx * 0.75)):
-		#max_bin += 1;
+		
+		prev = cur
+		cur = next
+		next = dft[i + 3].length();
+	
 	var frequency = pow(2, max_bin / EXP_BINS) * LOWEST_FREQUENCY;
 	
 	period = SAMPLE_RATE / frequency;
 	var phase = dft[max_bin];
 	var angle = atan2(phase.y, phase.x) / (PI * 2) - 0.25
 	center_sample = (angle + ceil(SAMPLE_COUNT * focus / period)) * period
+	
+	bass = clamp(sum / bass_end * 10.0, 0.0, 1.0);
 
 @export
-var material : Material
+var waveform_materials : Array[Material]
+@export
+var dft_materials : Array[Material]
+@export
+var chrono_materials : Array[Material]
 
-func _process(_delta: float) -> void:
-	var new_samples_count = capture.get_frames_available()
-	var new_samples = capture.get_buffer(new_samples_count)
-	for i in range(new_samples_count):
-		samples_data.set((samples_start + i) % SAMPLE_COUNT, (new_samples[i].x + new_samples[i].y) * 0.5)
-	samples_start = (samples_start + new_samples_count) % SAMPLE_COUNT
+func _process(delta: float) -> void:
 	update_samples_buffer()
 	calculate_dft()
-	update_stabilization()
+	analyze_dft()
 	
-	material.set_shader_parameter("samples_start", samples_start)
-	material.set_shader_parameter("samples_data", samples_data)
-	material.set_shader_parameter("dft", dft)
-	material.set_shader_parameter("period", period)
-	material.set_shader_parameter("focus", focus)
-	material.set_shader_parameter("center_sample", center_sample)
+	chrono += bass * delta;
+	
+	for material in waveform_materials:
+		material.set_shader_parameter("samples_start", samples_start)
+		material.set_shader_parameter("samples_data", samples_data)
+		material.set_shader_parameter("period", period)
+		material.set_shader_parameter("focus", focus)
+		material.set_shader_parameter("center_sample", center_sample)
+	
+	for material in dft_materials:
+		material.set_shader_parameter("dft", dft)
+	
+	for material in chrono_materials:
+		material.set_shader_parameter("bass", bass)
+		material.set_shader_parameter("chrono", chrono)

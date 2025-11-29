@@ -1,26 +1,118 @@
-[gd_scene load_steps=5 format=3 uid="uid://exd62laauuom"]
+[gd_scene load_steps=9 format=3 uid="uid://exd62laauuom"]
 
-[ext_resource type="Material" uid="uid://cd7brvyrm68tj" path="res://mateials/screen.material" id="1_pduxd"]
+[ext_resource type="Material" uid="uid://cd7brvyrm68tj" path="res://mateials/waveform.material" id="1_pduxd"]
 [ext_resource type="Script" uid="uid://buihdkxefqne6" path="res://scripts/process_audio.gd" id="2_pduxd"]
+[ext_resource type="Material" uid="uid://cgf48tb18dt3w" path="res://mateials/spectrogram.material" id="3_fdh1j"]
 [ext_resource type="Script" uid="uid://do2tq1r265hje" path="res://scripts/set_x_scale.gd" id="3_pduxd"]
+[ext_resource type="Texture2D" uid="uid://dqywbec2u7kpj" path="res://templates/Template.png" id="4_1aar8"]
+[ext_resource type="Material" uid="uid://il028dtvn1p5" path="res://mateials/spectrogram_circle.material" id="4_7h5e4"]
+[ext_resource type="Material" uid="uid://bxbvoganivqxu" path="res://mateials/noise.material" id="5_gy7hs"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_15vf4"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
-[node name="Screen" type="ColorRect" parent="."]
-material = ExtResource("1_pduxd")
+[node name="Audio processor" type="Node" parent="."]
+script = ExtResource("2_pduxd")
+waveform_materials = Array[Material]([ExtResource("1_pduxd")])
+dft_materials = Array[Material]([ExtResource("3_fdh1j"), ExtResource("4_7h5e4")])
+chrono_materials = Array[Material]([ExtResource("1_pduxd"), ExtResource("5_gy7hs")])
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamMicrophone_15vf4")
+autoplay = true
+max_polyphony = 5
+
+[node name="General" type="Control" parent="."]
+layout_mode = 3
 anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Waveform" type="ColorRect" parent="General"]
+material = ExtResource("1_pduxd")
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_pduxd")
 
-[node name="Audio processor" type="Node" parent="Screen"]
-script = ExtResource("2_pduxd")
-material = ExtResource("1_pduxd")
+[node name="Bass station" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = SubResource("AudioStreamMicrophone_15vf4")
-autoplay = true
+[node name="Template" type="TextureRect" parent="Bass station"]
+visible = false
+z_index = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_1aar8")
+
+[node name="Circle" type="ColorRect" parent="Bass station"]
+z_index = 1
+material = ExtResource("4_7h5e4")
+layout_mode = 0
+offset_left = 1610.0
+offset_top = 595.0
+offset_right = 1710.0
+offset_bottom = 695.0
+rotation = -1.5707964
+script = ExtResource("3_pduxd")
+
+[node name="Right Spectrogram" type="ColorRect" parent="Bass station"]
+z_index = 1
+material = ExtResource("3_fdh1j")
+layout_mode = 0
+offset_left = 1892.0001
+offset_top = 311.0
+offset_right = 2109.0713
+offset_bottom = 527.84753
+rotation = 0.7853982
+scale = Vector2(-1, 1)
+script = ExtResource("3_pduxd")
+
+[node name="Left Spectrogram" type="ColorRect" parent="Bass station"]
+z_index = 1
+material = ExtResource("3_fdh1j")
+layout_mode = 0
+offset_left = 1891.8741
+offset_top = 780.38684
+offset_right = 2108.9453
+offset_bottom = 997.2344
+rotation = 2.3561945
+script = ExtResource("3_pduxd")
+
+[node name="Cube" type="ColorRect" parent="Bass station"]
+material = ExtResource("5_gy7hs")
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -602.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("3_pduxd")
+
+[node name="Waveform" type="ColorRect" parent="Bass station"]
+material = ExtResource("1_pduxd")
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -671.0
+offset_right = 1192.0
+grow_vertical = 0
+script = ExtResource("3_pduxd")
